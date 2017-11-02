@@ -51,7 +51,7 @@
   }
 
   Orbit.prototype.position = function() {
-    return util.positionFromOrbit(this.axis, this.ecc, this.incl, this.ascn, this.anomaly, this.peri);
+    return positionFromOrbit(this.axis, this.ecc, this.incl, this.ascn, this.anomaly, this.peri);
   }
 
   function SpaceObj(name, id, parentName, getOffsetOrbit, props) {
@@ -90,7 +90,6 @@
     this.props = props || {};
   }
 
-
   function loadSpaceObjFromKernel(file) {
     return;
   }
@@ -111,36 +110,30 @@
 
   // Utilities
 
-  var util = {
-    positionFromOrbit: function(a, e, i, W, M, w) {
-      // Calculates the position of a body given its orbital parameters
+  var positionFromOrbit = function(a, e, i, W, M, w) {
+    // Calculates the position of a body given its orbital parameters
 
-      var E = M; // Eccentric anomaly
+    var E = M; // Eccentric anomaly
 
-      // Newton's method: find root of M - E + e * sin(E)
-      while (true) {
-        var dE = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
-        E -= dE;
-        if (Math.abs(dE) < 1e-9) break;
-      }
-
-      // True anomaly
-      var v = Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2)) * 2;
-
-      // Distance to center body
-      var r = (a * (1 - e * e)) / (1 + e * Math.cos(v));
-
-      // Rotate x, y, z coords relative to J2000 ecliptic
-      var x = r * (Math.cos(W) * Math.cos(w + v) - Math.sin(W) * Math.sin(w + v) * Math.cos(i));
-      var y = r * (Math.sin(W) * Math.cos(w + v) + Math.cos(W) * Math.sin(w + v) * Math.cos(i));
-      var z = r * (Math.sin(i) * Math.sin(w + v));
-
-      return new Vector3(-x, z, y);
-    },
-
-    getOrbit: function(obj, jd) {
-      return obj.getOrbit(jd);
+    // Newton's method: find root of M - E + e * sin(E)
+    while (true) {
+      var dE = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      E -= dE;
+      if (Math.abs(dE) < 1e-9) break;
     }
+
+    // True anomaly
+    var v = Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2)) * 2;
+
+    // Distance to center body
+    var r = (a * (1 - e * e)) / (1 + e * Math.cos(v));
+
+    // Rotate x, y, z coords relative to J2000 ecliptic
+    var x = r * (Math.cos(W) * Math.cos(w + v) - Math.sin(W) * Math.sin(w + v) * Math.cos(i));
+    var y = r * (Math.sin(W) * Math.cos(w + v) + Math.cos(W) * Math.sin(w + v) * Math.cos(i));
+    var z = r * (Math.sin(i) * Math.sin(w + v));
+
+    return new Vector3(-x, z, y);
   }
 
   // Exports
@@ -150,7 +143,7 @@
   exports.SpaceObj = SpaceObj;
   exports.zeroVector = zeroVector;
   exports.LoadedObjects = LoadedObjects;
-  exports.util = util;
+  exports.positionFromOrbit = positionFromOrbit;
 
 })));
 

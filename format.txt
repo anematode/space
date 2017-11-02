@@ -1,0 +1,11 @@
+Definition of the binary format for abstraction of the orbit of a planet, dwarf planet, or asteroid
+
+Definition of coordinates
+The coordinates used by the program are defined by the J2000 ecliptic (i.e. mean orbital plane of the Earth at J2000). The origin is defined to be the center of the Sun, a sphere 696000 km x 696000 km x 696000 km. All units are either in km or AU; the latter is for large distances the former measurement cannot handle. To minimize error between close objects, objects in proximity to each other are likely interacting with one another, and thus should be linked.
+
+Type 1: Constant position.
+
+Objects of this format are in a constant position (x, y, z). The format, therefore, is like so:
+
+[Hexadecimal]
+01		
